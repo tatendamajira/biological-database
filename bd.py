@@ -3,6 +3,7 @@ import sqlite3
 import hashlib
 from datetime import datetime
 import pandas as pd
+from streamlit_option_menu import option_menu
 
 # Hash function to securely store passwords
 def hash_password(password):
@@ -91,7 +92,8 @@ def view_biological_data():
     return data
 
 # Streamlit application UI
-st.title("Biological Database Management")
+st.set_page_config(page_title="Biological Database Management", page_icon="🌱", layout="wide")
+st.title("🌱 Biological Database Management System")
 
 # Database initialization
 init_db()
@@ -101,10 +103,28 @@ if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
     st.session_state.user = None
 
-menu = ["Login", "Register"]
-choice = st.sidebar.selectbox("Menu", menu)
+# Enhanced Sidebar Menu
+with st.sidebar:
+    selected = option_menu(
+        "Main Menu",
+        ["Login", "Register", "Forgot Password"],
+        icons=["box-arrow-in-right", "person-plus", "key"],
+        menu_icon="cast",
+        default_index=0,
+        styles={
+            "container": {"padding": "5!important", "background-color": "#f0f2f6"},
+            "icon": {"color": "#2C3E50", "font-size": "20px"},
+            "nav-link": {
+                "font-size": "16px",
+                "text-align": "left",
+                "margin": "0px",
+                "--hover-color": "#d1e8ff",
+            },
+            "nav-link-selected": {"background-color": "#5DADE2"},
+        },
+    )
 
-if choice == "Register":
+if selected == "Register":
     st.sidebar.subheader("Create a new account")
     name = st.sidebar.text_input("Name")
     reg_number = st.sidebar.text_input("Registration Number")
@@ -116,7 +136,7 @@ if choice == "Register":
         else:
             st.sidebar.error("Please fill in all fields.")
 
-elif choice == "Login":
+elif selected == "Login":
     if not st.session_state.authenticated:
         st.sidebar.subheader("Login to your account")
         reg_number = st.sidebar.text_input("Registration Number")
@@ -133,6 +153,13 @@ elif choice == "Login":
 
 if st.session_state.authenticated:
     user = st.session_state.user
+    with st.sidebar:
+        if st.button("Logout"):
+            st.session_state.authenticated = False
+            st.session_state.user = None
+            st.sidebar.success("Logged out successfully!")
+
+    st.markdown("---")
     if user[4] == "Research Partner":
         st.subheader("Add Biological Data")
         sample_name = st.text_input("Sample Name")
@@ -146,23 +173,33 @@ if st.session_state.authenticated:
                 st.success("Data added successfully!")
             else:
                 st.error("Please fill in all mandatory fields.")
-        
+
         # View Biological Data for Research Partner
         st.subheader("View Biological Data")
         data = view_biological_data()
         df = pd.DataFrame(data, columns=["Record ID", "Sample Name", "Species", "Collection Date", "Collected By", "Description"])
-        st.table(df)
+        st.dataframe(df, width=1000, height=500)
     else:
         st.subheader("View Biological Data")
         data = view_biological_data()
         df = pd.DataFrame(data, columns=["Record ID", "Sample Name", "Species", "Collection Date", "Collected By", "Description"])
-        st.table(df)
+        st.dataframe(df, width=1000, height=500)
 
-    if st.sidebar.button("Logout"):
-        st.session_state.authenticated = False
-        st.session_state.user = None
-        st.sidebar.success("Logged out successfully!")
-
-st.sidebar.markdown("---")
-if st.sidebar.button("Forgot Password?"):
+if selected == "Forgot Password":
     st.sidebar.write("Feature to reset password coming soon!")
+
+# Custom CSS for more professional design
+st.markdown(
+    """
+    <style>
+    .css-1d391kg, .stButton>button {
+        background-color: #5DADE2;
+        color: white;
+    }
+    .css-1d391kg:hover, .stButton>button:hover {
+        background-color: #2E86C1;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
