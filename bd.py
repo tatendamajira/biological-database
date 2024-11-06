@@ -1,8 +1,8 @@
 import sqlite3
-#from faker import Faker
+from faker import Faker
 import random
 
-#fake = Faker()
+fake = Faker()
 
 def add_biological_data(conn, sample_name, species, collection_date, collected_by, description):
     c = conn.cursor()
