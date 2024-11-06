@@ -1,0 +1,13 @@
+streamlit==1.26.0
+pandas==1.5.3
+datetime
+faker
+
+# Database
+sqlite3  # This is a Python standard library, no need to add to requirements.txt
+
+# Hashing library
+hashlib  # This is also part of Python's standard library
+
+# Other dependencies
+python-dateutil>=2.8.2
