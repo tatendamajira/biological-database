@@ -1,5 +1,5 @@
 import sqlite3
-from faker import Faker
+#from faker import Faker
 import random
 
 fake = Faker()
