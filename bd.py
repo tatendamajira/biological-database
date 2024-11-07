@@ -91,7 +91,7 @@ def view_biological_data():
     return data
 
 # Streamlit application UI
-st.title("Biological Database Management")
+st.title("Angela 's Biological Database ")
 
 # Database initialization
 init_db()
