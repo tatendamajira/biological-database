@@ -91,39 +91,21 @@ def view_biological_data():
     return data
 
 # Streamlit application UI
-st.markdown("""
-    <style>
-        .reportview-container {
-            background: #f7f7f7;
-        }
-        .sidebar .sidebar-content {
-            background: #2f4f4f;
-            color: white;
-        }
-        .stButton>button {
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 10px;
-        }
-    </style>
-""", unsafe_allow_html=True)
+if not st.session_state.authenticated:
+    st.markdown("""
+    ### About Angela's Biological Database
+    Angela's Biological Database is a secure platform designed to facilitate the collection, storage, and management of biological data. The application is intended for research partners and general users who are interested in working with biological samples and related metadata.
 
-st.title("\U0001F33F Angela's Biological Database")
+    **Features of the App:**
+    - **User Registration and Authentication**: Users can create accounts, log in securely, and access data based on their roles.
+    - **Data Management**: Research partners can add biological data, including information such as sample name, species, collection date, and more.
+    - **Data Access**: General users can view the collected data, while research partners have additional privileges to add new entries.
+    - **Access Logging**: All user activities are logged to ensure accountability and security.
 
-st.markdown("""
-### About Angela's Biological Database
-Angela's Biological Database is a secure platform designed to facilitate the collection, storage, and management of biological data. The application is intended for research partners and general users who are interested in working with biological samples and related metadata.
+    **Database Type**: The app uses an SQLite database, which is lightweight and ideal for small to medium-sized applications. It helps store user details, biological data, and access logs efficiently.
 
-**Features of the App:**
-- **User Registration and Authentication**: Users can create accounts, log in securely, and access data based on their roles.
-- **Data Management**: Research partners can add biological data, including information such as sample name, species, collection date, and more.
-- **Data Access**: General users can view the collected data, while research partners have additional privileges to add new entries.
-- **Access Logging**: All user activities are logged to ensure accountability and security.
-
-**Database Type**: The app uses an SQLite database, which is lightweight and ideal for small to medium-sized applications. It helps store user details, biological data, and access logs efficiently.
-
-The goal of this application is to provide a user-friendly and accessible tool for researchers to collaborate and share biological information in a structured manner.
-""")
+    The goal of this application is to provide a user-friendly and accessible tool for researchers to collaborate and share biological information in a structured manner.
+    """)
 
 # Database initialization
 init_db()
