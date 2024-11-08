@@ -134,10 +134,10 @@ if 'authenticated' not in st.session_state:
     st.session_state.user = None
 
 menu = ["Login", "Register"]
-choice = st.sidebar.selectbox("\U0001F4DD Menu", menu)
+choice = st.sidebar.selectbox("📋 Menu", menu)
 
 if choice == "Register":
-    st.sidebar.markdown("### \\U0001F194 Create a New Account")
+    st.sidebar.markdown("### \👤 Create a New Account")
     name = st.sidebar.text_input("Name")
     reg_number = st.sidebar.text_input("Registration Number")
     password = st.sidebar.text_input("Password", type='password')
@@ -150,7 +150,7 @@ if choice == "Register":
 
 elif choice == "Login":
     if not st.session_state.authenticated:
-        st.sidebar.markdown("### \U0001F511 Login to Your Account")
+        st.sidebar.markdown("### 🔒 Login to Your Account")
         reg_number = st.sidebar.text_input("Registration Number")
         password = st.sidebar.text_input("Password", type='password')
         if st.sidebar.button("Login"):
@@ -166,7 +166,7 @@ elif choice == "Login":
 if st.session_state.authenticated:
     user = st.session_state.user
     if user[4] == "Research Partner":
-        st.subheader("\U0001F4C3 Add Biological Data")
+        st.subheader("📄 Add Biological Data")
         sample_name = st.text_input("Sample Name")
         species = st.text_input("Species")
         collection_date = st.date_input("Collection Date")
@@ -180,7 +180,7 @@ if st.session_state.authenticated:
                 st.error("\u26A0 Please fill in all mandatory fields.")
         
         # View Biological Data for Research Partner
-        st.subheader("\U0001F4D2 View Biological Data")
+        st.subheader("📋 View Biological Data")
         data = view_biological_data()
         df = pd.DataFrame(data, columns=["Record ID", "Sample Name", "Species", "Collection Date", "Collected By", "Description"])
         st.table(df)
@@ -196,5 +196,5 @@ if st.session_state.authenticated:
         st.sidebar.success("\U00002705 Logged out successfully!")
 
 st.sidebar.markdown("---")
-if st.sidebar.button("\U0001F512 Forgot Password?"):
+if st.sidebar.button("🔑 Forgot Password?"):
     st.sidebar.write("Feature to reset password coming soon!")
