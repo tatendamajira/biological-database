@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as st 
 import sqlite3
 import hashlib
 from datetime import datetime
@@ -90,6 +90,14 @@ def view_biological_data():
     conn.close()
     return data
 
+# Delete biological data
+def delete_biological_data(record_id):
+    conn = sqlite3.connect('biological_database.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM biological_data WHERE record_id = ?', (record_id,))
+    conn.commit()
+    conn.close()
+
 # Streamlit application UI
 st.markdown("""
     <style>
@@ -134,10 +142,10 @@ if 'authenticated' not in st.session_state:
     st.session_state.user = None
 
 menu = ["Login", "Register"]
-choice = st.sidebar.selectbox("📋 Menu", menu)
+choice = st.sidebar.selectbox("\ud83d\uddc4 Menu", menu)
 
 if choice == "Register":
-    st.sidebar.markdown("### \👤 Create a New Account")
+    st.sidebar.markdown("### \F464 Create a New Account")
     name = st.sidebar.text_input("Name")
     reg_number = st.sidebar.text_input("Registration Number")
     password = st.sidebar.text_input("Password", type='password')
@@ -150,7 +158,7 @@ if choice == "Register":
 
 elif choice == "Login":
     if not st.session_state.authenticated:
-        st.sidebar.markdown("### 🔒 Login to Your Account")
+        st.sidebar.markdown("### \ud83d\udd12 Login to Your Account")
         reg_number = st.sidebar.text_input("Registration Number")
         password = st.sidebar.text_input("Password", type='password')
         if st.sidebar.button("Login"):
@@ -166,7 +174,7 @@ elif choice == "Login":
 if st.session_state.authenticated:
     user = st.session_state.user
     if user[4] == "Research Partner":
-        st.subheader("📄 Add Biological Data")
+        st.subheader("\ud83d\udccb Add Biological Data")
         sample_name = st.text_input("Sample Name")
         species = st.text_input("Species")
         collection_date = st.date_input("Collection Date")
@@ -179,11 +187,20 @@ if st.session_state.authenticated:
             else:
                 st.error("\u26A0 Please fill in all mandatory fields.")
         
-        # View Biological Data for Research Partner
-        st.subheader("📋 View Biological Data")
+        # View and Delete Biological Data for Research Partner
+        st.subheader("\ud83d\udccB View Biological Data")
         data = view_biological_data()
         df = pd.DataFrame(data, columns=["Record ID", "Sample Name", "Species", "Collection Date", "Collected By", "Description"])
         st.table(df)
+
+        # Delete biological data
+        record_id_to_delete = st.number_input("Enter Record ID to Delete", min_value=1, step=1)
+        if st.button("Delete Data"):
+            if record_id_to_delete:
+                delete_biological_data(record_id_to_delete)
+                st.success(f"\u274C Record ID {record_id_to_delete} deleted successfully!")
+            else:
+                st.error("\u26A0 Please enter a valid Record ID.")
     else:
         st.subheader("\U0001F4D2 View Biological Data")
         data = view_biological_data()
@@ -196,5 +213,5 @@ if st.session_state.authenticated:
         st.sidebar.success("\U00002705 Logged out successfully!")
 
 st.sidebar.markdown("---")
-if st.sidebar.button("🔑 Forgot Password?"):
+if st.sidebar.button("\ud83d\udd11 Forgot Password?"):
     st.sidebar.write("Feature to reset password coming soon!")
