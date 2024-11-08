@@ -134,7 +134,7 @@ if 'authenticated' not in st.session_state:
     st.session_state.user = None
 
 menu = ["Login", "Register"]
-choice = st.sidebar.selectbox("ANGELA 'S DATABASE", menu)
+choice = st.sidebar.selectbox("Developed by Angela", menu)
 
 if choice == "Register":
     st.sidebar.markdown("### 👤 Create a New Account")
