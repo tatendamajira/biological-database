@@ -48,9 +48,9 @@ def register_user(name, reg_number, password, role):
         c.execute('INSERT INTO users (name, reg_number, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?)', 
                   (name, reg_number, password_hash, role, created_at))
         conn.commit()
-        st.success("Account created successfully!")
+        st.success("\U0001F973 Account created successfully!")
     except sqlite3.IntegrityError:
-        st.error("Registration number already exists. Please use a different one.")
+        st.error("\u26A0 Registration number already exists. Please use a different one.")
     conn.close()
 
 # Authenticate a user
@@ -91,7 +91,24 @@ def view_biological_data():
     return data
 
 # Streamlit application UI
-st.title("Angela 's Biological Database ")
+st.markdown("""
+    <style>
+        .reportview-container {
+            background: #f7f7f7;
+        }
+        .sidebar .sidebar-content {
+            background: #2f4f4f;
+            color: white;
+        }
+        .stButton>button {
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 10px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.title("\U0001F33F Angela's Biological Database")
 
 # Database initialization
 init_db()
@@ -102,10 +119,10 @@ if 'authenticated' not in st.session_state:
     st.session_state.user = None
 
 menu = ["Login", "Register"]
-choice = st.sidebar.selectbox("Menu", menu)
+choice = st.sidebar.selectbox("\U0001F4DD Menu", menu)
 
 if choice == "Register":
-    st.sidebar.subheader("Create a new account")
+    st.sidebar.markdown("### \U0001F194 Create a New Account")
     name = st.sidebar.text_input("Name")
     reg_number = st.sidebar.text_input("Registration Number")
     password = st.sidebar.text_input("Password", type='password')
@@ -114,11 +131,11 @@ if choice == "Register":
         if name and reg_number and password:
             register_user(name, reg_number, password, role)
         else:
-            st.sidebar.error("Please fill in all fields.")
+            st.sidebar.error("\u26A0 Please fill in all fields.")
 
 elif choice == "Login":
     if not st.session_state.authenticated:
-        st.sidebar.subheader("Login to your account")
+        st.sidebar.markdown("### \U0001F511 Login to Your Account")
         reg_number = st.sidebar.text_input("Registration Number")
         password = st.sidebar.text_input("Password", type='password')
         if st.sidebar.button("Login"):
@@ -126,15 +143,15 @@ elif choice == "Login":
             if user:
                 st.session_state.authenticated = True
                 st.session_state.user = user
-                st.success(f"Welcome, {user[1]}!")
+                st.success(f"\U0001F44B Welcome, {user[1]}!")
                 log_access(user[0], "Login")
             else:
-                st.sidebar.error("Invalid credentials. Please try again.")
+                st.sidebar.error("\u26A0 Invalid credentials. Please try again.")
 
 if st.session_state.authenticated:
     user = st.session_state.user
     if user[4] == "Research Partner":
-        st.subheader("Add Biological Data")
+        st.subheader("\U0001F4C3 Add Biological Data")
         sample_name = st.text_input("Sample Name")
         species = st.text_input("Species")
         collection_date = st.date_input("Collection Date")
@@ -143,17 +160,17 @@ if st.session_state.authenticated:
         if st.button("Add Data"):
             if sample_name and species:
                 add_biological_data(sample_name, species, collection_date, collected_by, description)
-                st.success("Data added successfully!")
+                st.success("\U00002705 Data added successfully!")
             else:
-                st.error("Please fill in all mandatory fields.")
+                st.error("\u26A0 Please fill in all mandatory fields.")
         
         # View Biological Data for Research Partner
-        st.subheader("View Biological Data")
+        st.subheader("\U0001F4D2 View Biological Data")
         data = view_biological_data()
         df = pd.DataFrame(data, columns=["Record ID", "Sample Name", "Species", "Collection Date", "Collected By", "Description"])
         st.table(df)
     else:
-        st.subheader("View Biological Data")
+        st.subheader("\U0001F4D2 View Biological Data")
         data = view_biological_data()
         df = pd.DataFrame(data, columns=["Record ID", "Sample Name", "Species", "Collection Date", "Collected By", "Description"])
         st.table(df)
@@ -161,8 +178,8 @@ if st.session_state.authenticated:
     if st.sidebar.button("Logout"):
         st.session_state.authenticated = False
         st.session_state.user = None
-        st.sidebar.success("Logged out successfully!")
+        st.sidebar.success("\U00002705 Logged out successfully!")
 
 st.sidebar.markdown("---")
-if st.sidebar.button("Forgot Password?"):
+if st.sidebar.button("\U0001F512 Forgot Password?"):
     st.sidebar.write("Feature to reset password coming soon!")
